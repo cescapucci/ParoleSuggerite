@@ -1,3 +1,6 @@
+/**
+ * @author cesca
+ */
 package com.example.parolesuggerite;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -7,26 +10,24 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class HelloController {
-    Parole parole;
+    /**attributi*/
     @FXML
     private Label control;
     @FXML
     private ListView paroleListView;
-
     @FXML
     private TextField parolaField;
+
+    private ArrayList<String> daPassareAListView = new ArrayList<>();
     private StringProperty parola = new SimpleStringProperty();
 
     public HelloController() throws IOException {
-
-    }
-
-    @FXML
-    protected void suggerisciParola() {
 
     }
 
@@ -37,27 +38,51 @@ public class HelloController {
     }
 
     /* event handler */
+
+    /**
+     * scorro tutte le parole da file
+     * e comparo se la parola inizia con l'imput di text field
+     * se si, la salva su un arraylist che viene usato per fare la gui
+     */
     @FXML
     public void handleSuggerisciParole() {
-        System.out.println("\n\n\n-----------------------------\n\n\nentrato");
-        ArrayList<String> suggerimenti = new ArrayList<>();
-        System.out.println(Parole.parole.size());
-        for (int i = 0; i < Parole.parole.size(); i++){//scorre l'arryalist del file
-            System.out.println(Parole.parole.get(i));
-            if (Parole.parole.get(i).contains(parolaField.getText())){//se la scritta nel field è presente nella posizione
-                suggerimenti.add(Parole.parole.get(i));
+        System.out.println("\n-----------------------------\nentrato");
+        try {
+            BufferedReader reader;
+            reader = new BufferedReader(new FileReader("C:\\Users\\pucci_f\\Documents\\GitHub\\ParoleSuggerite\\src\\main\\java\\com\\example\\parolesuggerite\\parole.txt"));
+
+            String line = reader.readLine();
+
+            while (line != null) {
+                if (line.startsWith(parolaField.getText())) { //se la parola letta inzia cno quello che l'utente ha digitato
+                    daPassareAListView.add(line);
+                }
+                line = reader.readLine();
             }
+            reader.close();
+            System.out.println("aggiorno listview\n");
+            aggiornaLista();
+            daPassareAListView.clear();
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
 
-        aggiornaLista();
-
-        System.out.println("arraylist dei suggerimenti  inerenti");
-        for (int i = 0; i < suggerimenti.size(); i++){
-            System.out.println(suggerimenti.get(i));
-        }
-        if (suggerimenti.isEmpty()) control.setText("non abbiamo suggerimenti");
     }
 
+    /**
+     * aggiorna gui lista
+     */
+    @FXML
+    protected void aggiornaLista(){
+        paroleListView.getItems().clear();
+        for(int i=0; i<daPassareAListView.size(); i++){
+            paroleListView.getItems().add(daPassareAListView.get(i));
+        }
+    }
+
+    /**getter/setter*/
     public ListView getParoleListView() {
         return paroleListView;
     }
@@ -85,47 +110,4 @@ public class HelloController {
     public void setParola(String parola) {
         this.parola.set(parola);
     }
-
-    /**
-     * aggiorna gui lista
-     */
-    @FXML
-    protected void aggiornaLista(){
-        paroleListView.getItems().clear();
-        for(int i=0; i<Parole.parole.size(); i++){
-            paroleListView.getItems().add(Parole.parole.get(i));
-        }
-    }
 }
-
-/**
- *   /* event handler *
- *public void handleAggiungiDipendente(MouseEvent event){
-        *if(validaForm()){
-        *             // codice per aggiungere un nuovo dipendente
-        *             // i valori da usare sono resi disponibili invocando
-        *             // getNome(), getCognome() e getCodiceFiscale()
-        *}
-        *}
-        *
- *
- *
-        *private boolean validaForm(){
-        *boolean valido=true;
-        *String msg="";
-        *if(getNome()==null||getNome().isEmpty()){
-        *msg+="Inserisci nome\n";
-        *valido=false;
-        *}
-        *if(getCognome()==null||getCognome().isEmpty()){
-        *msg+="Inserisci cognome\n";
-        *valido=false;
-        *}
-        *if(getCodiceFiscale()==null||getCodiceFiscale().isEmpty()){
-        *msg+="Inserisci codice fiscale\n";
-        *valido=false;
-        *}
-        *setMessaggioValidazione(msg);
-        *return valido;
-        *}
- */
