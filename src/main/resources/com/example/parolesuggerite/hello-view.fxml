@@ -14,6 +14,20 @@
       <font>
          <Font size="18.0" />
       </font></Label>
+<<<<<<< Updated upstream
    <TextField fx:id="parolaField" promptText="inserisci una parola" />
    <ListView fx:id="paroleListView" prefHeight="200.0" prefWidth="200.0" />
+=======
+   <TextField fx:id="parolaField" onKeyTyped="#handleSuggerisciParole" promptText="inserisci una parola" />
+   <ListView fx:id="paroleListView" onEditCancel="#aggiornaLista" onEditCommit="#aggiornaLista" onEditStart="#aggiornaLista" onMouseClicked="#getParolaListView" prefHeight="200.0" prefWidth="200.0" />
+   <HBox prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <Button fx:id="selezionaParola" mnemonicParsing="false" onAction="#scegliParola" text="seleziona">
+            <HBox.margin>
+               <Insets right="20.0" />
+            </HBox.margin></Button>
+         <Label fx:id="parolaLabel" />
+      </children>
+   </HBox>
+>>>>>>> Stashed changes
 </VBox>
